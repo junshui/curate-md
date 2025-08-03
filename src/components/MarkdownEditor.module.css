@@ -42,33 +42,29 @@
 
 .editorContainer :global(.w-md-editor-text) {
   height: calc(100% - 29px) !important;
-  overflow: hidden !important;
 }
 
 .editorContainer :global(.w-md-editor-toolbar) {
   background-color: #f8f9fa;
   border-bottom: 1px solid #e9ecef;
   padding: 0.5rem;
-  flex-shrink: 0;
 }
 
 .editorContainer :global(.w-md-editor-toolbar-divider) {
   background-color: #dee2e6;
 }
 
-/* Ensure proper scrolling - only the textarea should scroll */
+/* Let react-md-editor handle its own internal scrolling naturally */
 .editorContainer :global(.w-md-editor-text-container) {
   height: 100% !important;
-  overflow: hidden !important;
 }
 
 .editorContainer :global(.w-md-editor-text-input) {
   height: 100% !important;
-  overflow: hidden !important;
 }
 
 .editorContainer :global(.w-md-editor-text-textarea) {
-  overflow-y: auto !important;
+  height: 100% !important;
 }
 
 /* Hide preview elements since we want editor-only mode */
