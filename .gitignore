@@ -102,3 +102,6 @@ temp/
 
 # Screenshots used for testing (optional - remove if you want to track them)
 screen*.png
+
+# Claude Code configuration file
+CLAUDE.md

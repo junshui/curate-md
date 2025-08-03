@@ -71,6 +71,7 @@ The built files will be in the `dist` directory.
    - View the source document in the left pane with **continuous scrolling** through all pages
    - Edit markdown content in the right pane with **independent scrolling** (no page interference)
    - **Side-by-side content comparison** - scroll markdown while keeping PDF content visible
+   - **Bidirectional scroll sync** - switch between edit and preview modes while maintaining your exact position
    - Use the toolbar for formatting options (bold, italic, headings, lists, links, etc.)
    - Export your curated content using the "Export .md" button
 
@@ -87,7 +88,7 @@ The markdown editor supports standard shortcuts:
 - **Ctrl/Cmd + I**: Italic
 - **Ctrl/Cmd + K**: Insert link
 - **F11**: Toggle fullscreen
-- **Ctrl/Cmd + Alt + P**: Toggle preview
+- **Ctrl/Cmd + Alt + P**: Toggle preview (with scroll position sync)
 
 ## File Structure
 
