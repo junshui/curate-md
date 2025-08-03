@@ -1,0 +1,159 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #fff;
+  border-bottom: 1px solid #e9ecef;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.toolbarLeft {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.toolbarRight {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.exportButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.exportButton:hover {
+  background-color: #218838;
+}
+
+.splitContainer {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.splitContainer .left-pane {
+  overflow: auto; /* Allow PDF content to scroll naturally */
+  position: relative;
+  height: 100%;
+}
+
+.splitContainer .right-pane {
+  overflow: hidden; /* Let markdown editor handle its own scrolling */
+  position: relative;
+  height: 100%;
+}
+
+.loadingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e3e3e3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loadingOverlay p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Split.js gutter styling */
+:global(.gutter) {
+  background-color: #e9ecef;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+YMAzYwKjGO6oa9e/diAIbF7A0DCHl378aGrQAAAABJRU5ErkJggg==');
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transition: background-color 0.2s;
+}
+
+:global(.gutter):hover {
+  background-color: #dee2e6;
+}
+
+:global(.gutter.gutter-horizontal) {
+  cursor: col-resize;
+  width: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+  
+  .title {
+    font-size: 1.1rem;
+  }
+  
+  .exportButton {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    height: 100vh;
+  }
+  
+  .splitContainer {
+    flex-direction: column;
+  }
+  
+  .splitContainer .left-pane,
+  .splitContainer .right-pane {
+    flex: 1;
+    min-height: 300px;
+  }
+  
+  :global(.gutter.gutter-horizontal) {
+    display: none;
+  }
+}
