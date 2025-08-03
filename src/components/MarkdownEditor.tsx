@@ -1,5 +1,18 @@
 import { useEffect, useRef } from 'react'
 import MDEditor from '@uiw/react-md-editor'
+import { 
+  bold, 
+  italic, 
+  strikethrough, 
+  hr, 
+  quote, 
+  unorderedListCommand, 
+  orderedListCommand, 
+  checkedListCommand, 
+  link, 
+  image, 
+  table 
+} from '@uiw/react-md-editor/commands'
 import styles from './MarkdownEditor.module.css'
 
 interface MarkdownEditorProps {
@@ -12,6 +25,21 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   onChange 
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
+
+  // Custom toolbar commands - keep only formatting buttons
+  const customCommands = [
+    bold,
+    italic,
+    strikethrough,
+    hr,
+    quote,
+    unorderedListCommand,
+    orderedListCommand,
+    checkedListCommand,
+    link,
+    image,
+    table
+  ]
 
   useEffect(() => {
     // Ensure the editor container has proper scroll behavior
@@ -40,6 +68,8 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
           preview="edit"
           hideToolbar={false}
           visibleDragbar={false}
+          commands={customCommands}
+          extraCommands={[]}
           textareaProps={{
             placeholder: 'Start writing your curated content here...',
             style: {
@@ -49,7 +79,6 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
             }
           }}
           data-color-mode="light"
-          height="100%"
         />
       </div>
     </div>

@@ -21,14 +21,12 @@
 
 .editorContainer {
   flex: 1;
-  overflow: hidden;
   position: relative;
   min-height: 0;
 }
 
 /* Custom styling for react-md-editor */
 .editorContainer :global(.w-md-editor) {
-  height: 100% !important;
   background-color: transparent;
 }
 
@@ -40,10 +38,6 @@
   outline: none !important;
 }
 
-.editorContainer :global(.w-md-editor-text) {
-  height: calc(100% - 29px) !important;
-}
-
 .editorContainer :global(.w-md-editor-toolbar) {
   background-color: #f8f9fa;
   border-bottom: 1px solid #e9ecef;
@@ -52,19 +46,6 @@
 
 .editorContainer :global(.w-md-editor-toolbar-divider) {
   background-color: #dee2e6;
-}
-
-/* Let react-md-editor handle its own internal scrolling naturally */
-.editorContainer :global(.w-md-editor-text-container) {
-  height: 100% !important;
-}
-
-.editorContainer :global(.w-md-editor-text-input) {
-  height: 100% !important;
-}
-
-.editorContainer :global(.w-md-editor-text-textarea) {
-  height: 100% !important;
 }
 
 /* Hide preview elements since we want editor-only mode */
