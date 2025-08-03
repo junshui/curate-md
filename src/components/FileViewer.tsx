@@ -17,42 +17,21 @@ const FileViewer: React.FC<FileViewerProps> = ({ content, type, errorMessage }) 
   const containerRef = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
-  const [pdfDocument, setPdfDocument] = useState<pdfjsLib.PDFDocumentProxy | null>(null)
-  const [containerReady, setContainerReady] = useState(false) // Track container availability
-  const [pdfCanvases, setPdfCanvases] = useState<HTMLCanvasElement[]>([]) // Store rendered PDF pages
+  const [renderedContent, setRenderedContent] = useState<string>('') // For DOCX HTML content
+  const [pdfCanvasUrls, setPdfCanvasUrls] = useState<string[]>([]) // Store PDF page data URLs
 
-  // Initial validation useEffect - no container dependency
-  useEffect(() => {
-    if (errorMessage) {
-      setError(errorMessage)
-      setLoading(false)
-      return
-    }
-
-    if (!content) {
-      setError('No content provided')
-      setLoading(false)
-      return
-    }
-
-    // Reset states for new content
-    setError(null)
-    setLoading(true)
-  }, [content, type, errorMessage])
-
-  // Rendering useEffect - triggered when container becomes available
+  // Main rendering effect
   useEffect(() => {
     const renderContent = async () => {
-      // Only run if we have content, no errors, and container is available
-      if (!content || errorMessage || !containerReady || !containerRef.current) {
+      if (errorMessage) {
+        setError(errorMessage)
+        setLoading(false)
         return
       }
 
-      // Validate container has proper dimensions
-      if (containerRef.current.offsetWidth === 0 || containerRef.current.offsetHeight === 0) {
-        setError('Container not properly sized for rendering')
+      if (!content) {
+        setError('No content provided')
         setLoading(false)
         return
       }
@@ -60,6 +39,8 @@ const FileViewer: React.FC<FileViewerProps> = ({ content, type, errorMessage }) 
       try {
         setLoading(true)
         setError(null)
+        setRenderedContent('')
+        setPdfCanvasUrls([])
         
         if (type === 'pdf') {
           await renderPDF()
@@ -74,12 +55,7 @@ const FileViewer: React.FC<FileViewerProps> = ({ content, type, errorMessage }) 
     }
 
     renderContent()
-  }, [content, type, errorMessage, containerReady]) // Depend on container being ready
-
-  // Effect to handle canvas attachment when state changes
-  useEffect(() => {
-    // This will trigger re-render when pdfCanvases changes
-  }, [pdfCanvases])
+  }, [content, type, errorMessage])
 
   const renderPDF = async () => {
     try {
@@ -99,9 +75,7 @@ const FileViewer: React.FC<FileViewerProps> = ({ content, type, errorMessage }) 
         useSystemFonts: true
       }).promise
       
-      setPdfDocument(pdf)
       setTotalPages(pdf.numPages)
-      setCurrentPage(1)
       
       await renderAllPDFPages(pdf)
     } catch (err) {
@@ -109,72 +83,24 @@ const FileViewer: React.FC<FileViewerProps> = ({ content, type, errorMessage }) 
     }
   }
 
-  const renderSingleTestPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNum: number) => {
-    if (!containerRef.current) {
-      throw new Error('Container not available')
-    }
-    
-    try {
-      const page = await pdf.getPage(pageNum)
-      
-      // Calculate scale based on container width
-      const containerWidth = containerRef.current.offsetWidth - 32 // Account for padding
-      const baseViewport = page.getViewport({ scale: 1 })
-      const scale = containerWidth > 0 ? Math.min(1.5, containerWidth / baseViewport.width) : 1.2
-      const viewport = page.getViewport({ scale })
-      
-      // Create canvas in memory (not attached to DOM yet)
-      const canvas = document.createElement('canvas')
-      const context = canvas.getContext('2d')
-      
-      if (!context) {
-        throw new Error('Failed to get canvas context')
-      }
-
-      canvas.height = viewport.height
-      canvas.width = viewport.width
-      canvas.style.maxWidth = '100%'
-      canvas.style.height = 'auto'
-      canvas.style.display = 'block'
-      canvas.style.margin = '0 auto'
-      canvas.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)'
-      canvas.style.borderRadius = '4px'
-      
-      // Render to canvas in memory
-      await page.render({
-        canvasContext: context,
-        viewport: viewport
-      }).promise
-      
-      // Update React state to trigger re-render with the canvas
-      setPdfCanvases([canvas])
-      
-    } catch (err) {
-      throw err
-    }
-  }
 
   const renderAllPDFPages = async (pdf: pdfjsLib.PDFDocumentProxy) => {
-    if (!containerRef.current) {
-      return
-    }
-
-    // Calculate optimal scale based on container width
-    const containerWidth = containerRef.current.offsetWidth - 32 // Account for padding
+    // Calculate optimal scale
     let scale = 1.2
     
     // Get first page to calculate scale
     try {
       const firstPage = await pdf.getPage(1)
       const baseViewport = firstPage.getViewport({ scale: 1 })
+      const containerWidth = 600 // Default container width
       scale = Math.min(1.5, containerWidth / baseViewport.width)
     } catch (err) {
       // Use default scale if calculation fails
     }
 
-    const canvases: HTMLCanvasElement[] = []
+    const canvasUrls: string[] = []
     
-    // Render each page to canvas in memory
+    // Render each page to canvas and convert to data URL
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
       try {
         const page = await pdf.getPage(pageNum)
@@ -183,7 +109,7 @@ const FileViewer: React.FC<FileViewerProps> = ({ content, type, errorMessage }) 
         // Create canvas for the page
         const canvas = document.createElement('canvas')
         const context = canvas.getContext('2d', { 
-          alpha: false, // Slight performance improvement
+          alpha: false,
           willReadFrequently: false 
         })
         
@@ -194,15 +120,6 @@ const FileViewer: React.FC<FileViewerProps> = ({ content, type, errorMessage }) 
         // Set canvas dimensions
         canvas.height = viewport.height
         canvas.width = viewport.width
-        canvas.style.maxWidth = '100%'
-        canvas.style.height = 'auto'
-        canvas.style.display = 'block'
-        canvas.style.margin = '0 auto 1rem auto'
-        canvas.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)'
-        canvas.style.borderRadius = '4px'
-        
-        // Add page number as data attribute
-        canvas.setAttribute('data-page', pageNum.toString())
         
         // Render the page
         await page.render({
@@ -210,7 +127,9 @@ const FileViewer: React.FC<FileViewerProps> = ({ content, type, errorMessage }) 
           viewport: viewport
         }).promise
         
-        canvases.push(canvas)
+        // Convert to data URL and store
+        const dataUrl = canvas.toDataURL('image/png')
+        canvasUrls.push(dataUrl)
         
         // Small delay to prevent blocking the UI
         if (pageNum % 3 === 0) {
@@ -219,54 +138,21 @@ const FileViewer: React.FC<FileViewerProps> = ({ content, type, errorMessage }) 
         
       } catch (err) {
         // Continue with other pages even if one fails
+        console.warn(`Failed to render PDF page ${pageNum}:`, err)
       }
     }
     
-    // Update React state with all rendered canvases
-    setPdfCanvases(canvases)
+    // Update React state with all rendered page URLs
+    setPdfCanvasUrls(canvasUrls)
   }
 
-  const renderPDFPage = async (pdf: pdfjsLib.PDFDocumentProxy, pageNumber: number) => {
-    // This function is kept for backward compatibility but not used in continuous view
-    if (!containerRef.current) return
-
-    const page = await pdf.getPage(pageNumber)
-    const viewport = page.getViewport({ scale: 1.2 })
-    
-    // Clear previous content
-    containerRef.current.innerHTML = ''
-    
-    const canvas = document.createElement('canvas')
-    const context = canvas.getContext('2d')
-    
-    if (!context) {
-      throw new Error('Failed to get 2D context')
-    }
-
-    canvas.height = viewport.height
-    canvas.width = viewport.width
-    canvas.style.maxWidth = '100%'
-    canvas.style.height = 'auto'
-    
-    containerRef.current.appendChild(canvas)
-    
-    await page.render({
-      canvasContext: context,
-      viewport: viewport
-    }).promise
-  }
 
   const renderDOCX = async () => {
     try {
       const result = await mammoth.convertToHtml({ arrayBuffer: content })
       
-      if (!containerRef.current) return
-      
-      containerRef.current.innerHTML = `
-        <div class="${styles.docxContent}">
-          ${result.value}
-        </div>
-      `
+      // Store the rendered HTML content in React state
+      setRenderedContent(result.value)
       
       if (result.messages.length > 0) {
         console.warn('Mammoth conversion warnings:', result.messages)
@@ -276,27 +162,17 @@ const FileViewer: React.FC<FileViewerProps> = ({ content, type, errorMessage }) 
     }
   }
 
-  // Page navigation functions removed since we now use continuous view
-  // const handlePrevPage = async () => { ... }
-  // const handleNextPage = async () => { ... }
-
-  // Container ref callback to trigger rendering when available
-  const containerRefCallback = (element: HTMLDivElement | null) => {
-    containerRef.current = element
-    setContainerReady(!!element) // Trigger the rendering useEffect
-  }
-
-  // Canvas ref callback to attach canvas elements to DOM
-  const canvasRefCallback = (element: HTMLDivElement | null) => {
-    if (element && pdfCanvases.length > 0) {
-      // Clear any existing content first
-      element.innerHTML = ''
-      // Append all canvas elements
-      pdfCanvases.forEach(canvas => {
-        element.appendChild(canvas)
+  // Cleanup URLs when component unmounts or content changes
+  useEffect(() => {
+    return () => {
+      // Clean up any object URLs if we were using them
+      pdfCanvasUrls.forEach(url => {
+        if (url.startsWith('blob:')) {
+          URL.revokeObjectURL(url)
+        }
       })
     }
-  }
+  }, [pdfCanvasUrls])
 
   return (
     <div className={styles.container}>
@@ -312,7 +188,7 @@ const FileViewer: React.FC<FileViewerProps> = ({ content, type, errorMessage }) 
       </div>
       
       <div className={styles.content}>
-        <div ref={containerRefCallback} className={styles.documentContainer}>
+        <div ref={containerRef} className={styles.documentContainer}>
           {loading && (
             <div className={styles.loadingState}>
               <div className={styles.spinner}></div>
@@ -326,14 +202,35 @@ const FileViewer: React.FC<FileViewerProps> = ({ content, type, errorMessage }) 
               <p>{error}</p>
             </div>
           )}
-          {!loading && !error && pdfCanvases.length === 0 && (
-            <div style={{color: '#6c757d', padding: '2rem', textAlign: 'center'}}>
-              <p>No content to display</p>
+          {!loading && !error && type === 'docx' && renderedContent && (
+            <div 
+              className={styles.docxContent}
+              dangerouslySetInnerHTML={{ __html: renderedContent }}
+            />
+          )}
+          {!loading && !error && type === 'pdf' && pdfCanvasUrls.length > 0 && (
+            <div className={styles.pdfContent}>
+              {pdfCanvasUrls.map((url, index) => (
+                <img
+                  key={index}
+                  src={url}
+                  alt={`PDF page ${index + 1}`}
+                  className={styles.pdfPage}
+                  style={{
+                    maxWidth: '100%',
+                    height: 'auto',
+                    display: 'block',
+                    margin: '0 auto 1rem auto',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                    borderRadius: '4px'
+                  }}
+                />
+              ))}
             </div>
           )}
-          {!loading && !error && pdfCanvases.length > 0 && (
-            <div ref={canvasRefCallback} className={styles.pdfContent}>
-              {/* Canvas elements will be attached via ref callback */}
+          {!loading && !error && !renderedContent && pdfCanvasUrls.length === 0 && (
+            <div style={{color: '#6c757d', padding: '2rem', textAlign: 'center'}}>
+              <p>No content to display</p>
             </div>
           )}
         </div>
