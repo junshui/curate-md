@@ -62,8 +62,14 @@
   height: 100%;
 }
 
-.splitContainer .right-pane {
+.splitContainer .middle-pane {
   overflow: hidden; /* Let markdown editor handle its own scrolling */
+  position: relative;
+  height: 100%;
+}
+
+.splitContainer .right-pane {
+  overflow: hidden; /* Let markdown preview handle its own scrolling */
   position: relative;
   height: 100%;
 }
@@ -148,6 +154,7 @@
   }
   
   .splitContainer .left-pane,
+  .splitContainer .middle-pane,
   .splitContainer .right-pane {
     flex: 1;
     min-height: 300px;

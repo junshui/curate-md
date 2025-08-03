@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react'
 import Split from 'split.js'
 import { FileType } from '../types'
 import FileViewer from './FileViewer'
-import MarkdownCurator from './MarkdownCurator'
+import MarkdownEditor from './MarkdownEditor'
+import MarkdownPreview from './MarkdownPreview'
 import styles from './MainView.module.css'
 
 interface MainViewProps {
@@ -30,12 +31,13 @@ const MainView: React.FC<MainViewProps> = ({
   useEffect(() => {
     if (splitContainerRef.current && !splitInstanceRef.current) {
       const leftPane = splitContainerRef.current.querySelector('.left-pane') as HTMLElement
+      const middlePane = splitContainerRef.current.querySelector('.middle-pane') as HTMLElement
       const rightPane = splitContainerRef.current.querySelector('.right-pane') as HTMLElement
       
-      if (leftPane && rightPane) {
-        splitInstanceRef.current = Split([leftPane, rightPane], {
-          sizes: [50, 50],
-          minSize: [300, 300],
+      if (leftPane && middlePane && rightPane) {
+        splitInstanceRef.current = Split([leftPane, middlePane, rightPane], {
+          sizes: [33, 34, 33],
+          minSize: [250, 300, 250],
           gutterSize: 8,
           cursor: 'col-resize',
           direction: 'horizontal'
@@ -106,10 +108,16 @@ const MainView: React.FC<MainViewProps> = ({
           />
         </div>
         
-        <div className="right-pane">
-          <MarkdownCurator
-            initialText={initialMarkdown}
+        <div className="middle-pane">
+          <MarkdownEditor
+            value={currentMarkdown || initialMarkdown}
             onChange={onMarkdownChange}
+          />
+        </div>
+        
+        <div className="right-pane">
+          <MarkdownPreview
+            value={currentMarkdown || initialMarkdown}
           />
         </div>
       </div>

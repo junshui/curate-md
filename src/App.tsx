@@ -8,7 +8,7 @@ import styles from './components/App.module.css'
 function App() {
   const [appPhase, setAppPhase] = useState<AppPhase>('staging')
   const [sourceFile, setSourceFile] = useState<File | null>(null)
-  const [markdownFile, setMarkdownFile] = useState<File | null>(null)
+  const [, setMarkdownFile] = useState<File | null>(null)
   const [processedData, setProcessedData] = useState<ProcessedData>({
     sourceContent: null,
     markdownText: null

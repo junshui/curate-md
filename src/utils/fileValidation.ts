@@ -1,5 +1,5 @@
 import { FileType } from '../types'
-import { validateFileSize, getFileErrorMessage } from './errorHandling'
+import { validateFileSize } from './errorHandling'
 
 export const getFileType = (file: File): FileType | null => {
   const extension = file.name.toLowerCase().split('.').pop()

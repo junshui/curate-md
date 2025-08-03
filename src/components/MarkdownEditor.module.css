@@ -1,0 +1,92 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #fff;
+}
+
+.header {
+  padding: 0.75rem 1rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.editorContainer {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  min-height: 0;
+}
+
+/* Custom styling for react-md-editor */
+.editorContainer :global(.w-md-editor) {
+  height: 100% !important;
+  background-color: transparent;
+}
+
+.editorContainer :global(.w-md-editor-text-textarea) {
+  padding: 1rem !important;
+  resize: none !important;
+  background-color: #fff !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.editorContainer :global(.w-md-editor-text) {
+  height: calc(100% - 29px) !important;
+  overflow: hidden !important;
+}
+
+.editorContainer :global(.w-md-editor-toolbar) {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  padding: 0.5rem;
+  flex-shrink: 0;
+}
+
+.editorContainer :global(.w-md-editor-toolbar-divider) {
+  background-color: #dee2e6;
+}
+
+/* Ensure proper scrolling - only the textarea should scroll */
+.editorContainer :global(.w-md-editor-text-container) {
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+.editorContainer :global(.w-md-editor-text-input) {
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+.editorContainer :global(.w-md-editor-text-textarea) {
+  overflow-y: auto !important;
+}
+
+/* Hide preview elements since we want editor-only mode */
+.editorContainer :global(.w-md-editor-preview) {
+  display: none !important;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.5rem;
+  }
+  
+  .title {
+    font-size: 0.9rem;
+  }
+  
+  .editorContainer :global(.w-md-editor-toolbar) {
+    padding: 0.25rem;
+  }
+}
