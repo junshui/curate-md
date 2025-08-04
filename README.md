@@ -6,12 +6,12 @@ A client-side web application for curating documents by providing a split-view i
 
 ## Features
 
-- **Dual Upload Support**: Upload PDF/DOCX source documents alongside optional Markdown files
+- **Dual Upload Support**: Upload Markdown files alongside optional PDF/DOCX source documents
 - **Flexible Three-Panel Interface**: Resizable panes with **toggleable visibility** for optimal workflow:
   - **📄 Source Panel**: Original document viewer (PDF/DOCX)
   - **✏️ Editor Panel**: Markdown editing panel
   - **👁️ Preview Panel**: Live markdown preview
-  - **Panel Controls**: Toggle any panel on/off via toolbar buttons for performance and focus
+  - **Panel Controls**: Toggle any panel on/off via toolbar buttons for performance and focus (source panel only available when source document is loaded)
 - **Document Rendering**: 
   - PDF files rendered using PDF.js with **continuous scroll view** (all pages displayed vertically as images for performance)
   - DOCX files converted to clean HTML using Mammoth.js
@@ -76,33 +76,34 @@ The built files will be in the `dist` directory.
 
 1. **Staging Phase**: 
    - Drag and drop or browse for files
-   - Upload a source document (PDF or DOCX)
-   - Optionally upload an existing Markdown file, or start with a blank document
+   - Upload a Markdown file (required) - either upload an existing file or start with a blank document
+   - Optionally upload a source document (PDF or DOCX) for reference
    - Only one source document and one Markdown file can be staged at a time; extra files are rejected and listed with reasons
    - Click "Load Documents" to proceed
 
 2. **Active Curation Phase**:
    - Work in a **flexible panel layout** (all panels scroll independently):
-     - **📄 Source Panel**: View the original document (PDF/DOCX) with continuous scroll
+     - **📄 Source Panel**: View the original document (PDF/DOCX) with continuous scroll (only visible when source document is loaded)
      - **✏️ Editor Panel**: Edit markdown content with a rich, high-performance editor
      - **👁️ Preview Panel**: See a live preview of your markdown as you edit
    - **Panel Management**:
      - **Toggle Controls**: Use toolbar buttons to show/hide any panel (📄 Source, ✏️ Editor, 👁️ Preview)
      - **Performance Boost**: Hide preview panel for faster editing response during intensive writing
      - **Focus Mode**: Show only the editor panel to eliminate distractions
+     - **Source Panel Auto-Hide**: Source panel is automatically hidden when no source document is loaded
      - **Flexible Layouts**: Single panel (100%), dual panels (50%/50%), or triple panels (33%/34%/33%)
    - Use the toolbar for formatting options (bold, italic, headings, lists, links, tables, etc.)
    - Export your curated content using the "Export .md" button at any time
 
 ### Supported File Types
 
-- **Source Documents**: PDF (.pdf), Word Documents (.docx)
-- **Markdown Files**: Markdown (.md)
+- **Source Documents**: PDF (.pdf), Word Documents (.docx) - **Optional**
+- **Markdown Files**: Markdown (.md) - **Required**
 - **File Size Limits**: 50MB for source documents, 10MB for markdown files
 
 ### File Rejection & Error Handling
 
-- Only one source document and one Markdown file can be staged at a time. Extra files are rejected and listed with reasons.
+- A Markdown file is required to proceed. Source documents are optional but only one of each type can be staged at a time. Extra files are rejected and listed with reasons.
 - Unsupported file types or files exceeding size limits are rejected with clear error messages.
 - Rejected files are shown in a list and can be cleared.
 - Loading and error states are clearly indicated during document processing and rendering.

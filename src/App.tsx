@@ -11,25 +11,26 @@ function App() {
   const [, setMarkdownFile] = useState<File | null>(null)
   const [processedData, setProcessedData] = useState<ProcessedData>({
     sourceContent: null,
-    markdownText: null
+    markdownText: ''
   })
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [currentMarkdown, setCurrentMarkdown] = useState<string>('')
 
-  const handleLoadDocuments = async (source: File, markdown: File | null) => {
+  const handleLoadDocuments = async (markdown: File, source: File | null) => {
     setAppPhase('loading')
     setSourceFile(source)
     setMarkdownFile(markdown)
     setErrorMessage(null)
 
     try {
-      // Read the file as ArrayBuffer and create a copy to prevent detachment
-      const originalBuffer = await source.arrayBuffer()
-      const sourceBuffer = originalBuffer.slice(0) // Create a copy
+      // Read markdown file (now required)
+      const markdownText = await markdown.text()
       
-      let markdownText = ''
-      if (markdown) {
-        markdownText = await markdown.text()
+      // Read source file if provided (now optional)
+      let sourceBuffer: ArrayBuffer | null = null
+      if (source) {
+        const originalBuffer = await source.arrayBuffer()
+        sourceBuffer = originalBuffer.slice(0) // Create a copy
       }
 
       setProcessedData({
@@ -74,15 +75,15 @@ function App() {
         <div className={styles.loadingArea}>
           <div className={styles.loadingSpinner}></div>
           <h2>Loading documents...</h2>
-          <p>Processing {sourceFile?.name}...</p>
+          <p>Processing {sourceFile?.name || 'markdown file'}...</p>
         </div>
       )}
       
-      {appPhase === 'active' && processedData.sourceContent && (
+      {appPhase === 'active' && (
         <MainView
           sourceContent={processedData.sourceContent}
-          sourceType={getSourceType()!}
-          initialMarkdown={processedData.markdownText || ''}
+          sourceType={getSourceType()}
+          initialMarkdown={processedData.markdownText}
           onMarkdownChange={handleMarkdownChange}
           isLoading={false}
           errorMessage={null}

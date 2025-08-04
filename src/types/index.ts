@@ -4,7 +4,7 @@ export type FileType = 'pdf' | 'docx'
 
 export interface ProcessedData {
   sourceContent: ArrayBuffer | null
-  markdownText: string | null
+  markdownText: string
 }
 
 export interface RejectedFile {

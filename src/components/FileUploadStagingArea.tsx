@@ -4,7 +4,7 @@ import { validateFiles } from '../utils/fileValidation'
 import styles from './FileUploadStagingArea.module.css'
 
 interface FileUploadStagingAreaProps {
-  onLoadDocuments: (sourceFile: File, markdownFile: File | null) => void
+  onLoadDocuments: (markdownFile: File, sourceFile: File | null) => void
 }
 
 const FileUploadStagingArea: React.FC<FileUploadStagingAreaProps> = ({ onLoadDocuments }) => {
@@ -86,22 +86,20 @@ const FileUploadStagingArea: React.FC<FileUploadStagingAreaProps> = ({ onLoadDoc
   }
 
   const handleLoadClick = () => {
-    if (stagedSourceFile) {
-      onLoadDocuments(stagedSourceFile, stagedMarkdownFile)
+    if (stagedMarkdownFile) {
+      onLoadDocuments(stagedMarkdownFile, stagedSourceFile)
     }
   }
 
   const handleStartBlank = () => {
-    if (stagedSourceFile) {
-      setStagedMarkdownFile(null)
-    }
+    setStagedMarkdownFile(new File([''], 'untitled.md', { type: 'text/markdown' }))
   }
 
   const clearRejectedFiles = () => {
     setRejectedFiles([])
   }
 
-  const isLoadReady = stagedSourceFile !== null
+  const isLoadReady = stagedMarkdownFile !== null
 
   return (
     <div className={styles.container}>
@@ -114,8 +112,55 @@ const FileUploadStagingArea: React.FC<FileUploadStagingAreaProps> = ({ onLoadDoc
         <div className={styles.uploadSlots}>
           <div className={styles.slot}>
             <div className={styles.slotHeader}>
+              <h3>Markdown File</h3>
+              <span className={styles.fileTypes}>MD (required)</span>
+            </div>
+            
+            {stagedMarkdownFile ? (
+              <div className={styles.stagedFile}>
+                <div className={styles.fileIcon}>📝</div>
+                <div className={styles.fileName}>{stagedMarkdownFile.name}</div>
+                <div className={styles.fileSize}>
+                  {(stagedMarkdownFile.size / 1024).toFixed(2)} KB
+                </div>
+                <button 
+                  className={styles.removeButton}
+                  onClick={() => setStagedMarkdownFile(null)}
+                >
+                  ×
+                </button>
+              </div>
+            ) : (
+              <div className={styles.emptySlot}>
+                <div className={styles.uploadIcon}>📝</div>
+                <p>Drop your markdown file here</p>
+                <button 
+                  className={styles.browseButton}
+                  onClick={() => markdownInputRef.current?.click()}
+                >
+                  Browse Files
+                </button>
+                <button 
+                  className={styles.blankButton}
+                  onClick={handleStartBlank}
+                >
+                  Start with blank document
+                </button>
+                <input
+                  ref={markdownInputRef}
+                  type="file"
+                  accept=".md"
+                  onChange={handleMarkdownFileSelect}
+                  style={{ display: 'none' }}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className={styles.slot}>
+            <div className={styles.slotHeader}>
               <h3>Source Document</h3>
-              <span className={styles.fileTypes}>PDF or DOCX</span>
+              <span className={styles.fileTypes}>PDF or DOCX (optional)</span>
             </div>
             
             {stagedSourceFile ? (
@@ -147,55 +192,6 @@ const FileUploadStagingArea: React.FC<FileUploadStagingAreaProps> = ({ onLoadDoc
                   type="file"
                   accept=".pdf,.docx"
                   onChange={handleSourceFileSelect}
-                  style={{ display: 'none' }}
-                />
-              </div>
-            )}
-          </div>
-
-          <div className={styles.slot}>
-            <div className={styles.slotHeader}>
-              <h3>Markdown File</h3>
-              <span className={styles.fileTypes}>MD (optional)</span>
-            </div>
-            
-            {stagedMarkdownFile ? (
-              <div className={styles.stagedFile}>
-                <div className={styles.fileIcon}>📝</div>
-                <div className={styles.fileName}>{stagedMarkdownFile.name}</div>
-                <div className={styles.fileSize}>
-                  {(stagedMarkdownFile.size / 1024).toFixed(2)} KB
-                </div>
-                <button 
-                  className={styles.removeButton}
-                  onClick={() => setStagedMarkdownFile(null)}
-                >
-                  ×
-                </button>
-              </div>
-            ) : (
-              <div className={styles.emptySlot}>
-                <div className={styles.uploadIcon}>📝</div>
-                <p>Drop your markdown file here</p>
-                <button 
-                  className={styles.browseButton}
-                  onClick={() => markdownInputRef.current?.click()}
-                >
-                  Browse Files
-                </button>
-                {stagedSourceFile && (
-                  <button 
-                    className={styles.blankButton}
-                    onClick={handleStartBlank}
-                  >
-                    Start with blank document
-                  </button>
-                )}
-                <input
-                  ref={markdownInputRef}
-                  type="file"
-                  accept=".md"
-                  onChange={handleMarkdownFileSelect}
                   style={{ display: 'none' }}
                 />
               </div>

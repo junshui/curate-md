@@ -13,8 +13,8 @@ interface PanelVisibility {
 }
 
 interface MainViewProps {
-  sourceContent: ArrayBuffer
-  sourceType: FileType
+  sourceContent: ArrayBuffer | null
+  sourceType: FileType | undefined
   initialMarkdown: string
   onMarkdownChange: (newText: string) => void
   isLoading: boolean
@@ -34,7 +34,7 @@ const MainView: React.FC<MainViewProps> = ({
   const splitContainerRef = useRef<HTMLDivElement>(null)
   const splitInstanceRef = useRef<Split.Instance | null>(null)
   const [panelVisibility, setPanelVisibility] = useState<PanelVisibility>({
-    source: true,
+    source: sourceContent !== null,
     editor: true,
     preview: true
   })
@@ -57,6 +57,11 @@ const MainView: React.FC<MainViewProps> = ({
 
   // Toggle panel visibility with validation (at least one panel must be visible)
   const togglePanel = (panel: keyof PanelVisibility) => {
+    // Don't allow toggling source panel if there's no source content
+    if (panel === 'source' && !sourceContent) {
+      return
+    }
+    
     const newVisibility = { ...panelVisibility, [panel]: !panelVisibility[panel] }
     const visibleCount = Object.values(newVisibility).filter(Boolean).length
     
@@ -141,8 +146,8 @@ const MainView: React.FC<MainViewProps> = ({
             <button 
               className={`${styles.toggleButton} ${panelVisibility.source ? styles.active : styles.inactive}`}
               onClick={() => togglePanel('source')}
-              title="Toggle source document panel"
-              disabled={visiblePanels.length === 1 && panelVisibility.source}
+              title={sourceContent ? "Toggle source document panel" : "No source document loaded"}
+              disabled={(visiblePanels.length === 1 && panelVisibility.source) || !sourceContent}
             >
               📄 Source
             </button>
@@ -186,7 +191,7 @@ const MainView: React.FC<MainViewProps> = ({
         ref={splitContainerRef}
         className={`${styles.splitContainer} ${styles[`panels-${visiblePanels.length}`]}`}
       >
-        {panelVisibility.source && (
+        {panelVisibility.source && sourceContent && sourceType && (
           <div className="source-pane">
             <FileViewer
               content={sourceContent}
