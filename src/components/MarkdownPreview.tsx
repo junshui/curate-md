@@ -25,7 +25,6 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = memo(({ value }) => {
       <MDEditor.Markdown
         source={debouncedValue || ''}
         style={{ 
-          whiteSpace: 'pre-wrap',
           backgroundColor: '#fff',
           padding: '1rem',
           height: '100%',

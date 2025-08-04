@@ -28,14 +28,14 @@
 }
 
 /* Custom styling for markdown preview */
-.previewContainer :global(.w-md-editor-markdown) {
+.previewContainer :global(.wmde-markdown) {
   background-color: #fff !important;
   color: #333 !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.6;
 }
 
-.previewContainer :global(.w-md-editor-markdown h1) {
+.previewContainer :global(.wmde-markdown h1) {
   border-bottom: 2px solid #eee;
   padding-bottom: 0.3em;
   margin-top: 0;
@@ -44,7 +44,7 @@
   font-weight: 600;
 }
 
-.previewContainer :global(.w-md-editor-markdown h2) {
+.previewContainer :global(.wmde-markdown h2) {
   border-bottom: 1px solid #eee;
   padding-bottom: 0.3em;
   margin-top: 1.5rem;
@@ -53,50 +53,50 @@
   font-weight: 600;
 }
 
-.previewContainer :global(.w-md-editor-markdown h3) {
+.previewContainer :global(.wmde-markdown h3) {
   margin-top: 1.25rem;
   margin-bottom: 0.75rem;
   font-size: 1.25em;
   font-weight: 600;
 }
 
-.previewContainer :global(.w-md-editor-markdown h4,
-.w-md-editor-markdown h5,
-.w-md-editor-markdown h6) {
+.previewContainer :global(.wmde-markdown h4,
+.wmde-markdown h5,
+.wmde-markdown h6) {
   margin-top: 1rem;
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
 
-.previewContainer :global(.w-md-editor-markdown ul,
-.w-md-editor-markdown ol) {
+.previewContainer :global(.wmde-markdown ul,
+.wmde-markdown ol) {
   padding-left: 2em;
   margin: 1em 0;
 }
 
-.previewContainer :global(.w-md-editor-markdown li) {
+.previewContainer :global(.wmde-markdown li) {
   margin: 0.25em 0;
 }
 
-.previewContainer :global(.w-md-editor-markdown ul ul,
-.w-md-editor-markdown ul ol,
-.w-md-editor-markdown ol ol,
-.w-md-editor-markdown ol ul) {
+.previewContainer :global(.wmde-markdown ul ul,
+.wmde-markdown ul ol,
+.wmde-markdown ol ol,
+.wmde-markdown ol ul) {
   margin: 0.5em 0;
 }
 
-.previewContainer :global(.w-md-editor-markdown p) {
+.previewContainer :global(.wmde-markdown p) {
   margin: 1em 0;
 }
 
-.previewContainer :global(.w-md-editor-markdown blockquote) {
+.previewContainer :global(.wmde-markdown blockquote) {
   margin: 1em 0;
   padding: 0 1em;
   color: #666;
   border-left: 4px solid #ddd;
 }
 
-.previewContainer :global(.w-md-editor-markdown code) {
+.previewContainer :global(.wmde-markdown code) {
   background-color: #f1f3f4;
   padding: 0.2em 0.4em;
   border-radius: 3px;
@@ -104,7 +104,7 @@
   font-size: 0.9em;
 }
 
-.previewContainer :global(.w-md-editor-markdown pre) {
+.previewContainer :global(.wmde-markdown pre) {
   background-color: #f8f8f8;
   border: 1px solid #e1e4e8;
   border-radius: 6px;
@@ -113,31 +113,31 @@
   margin: 1em 0;
 }
 
-.previewContainer :global(.w-md-editor-markdown pre code) {
+.previewContainer :global(.wmde-markdown pre code) {
   background-color: transparent;
   padding: 0;
   border-radius: 0;
 }
 
-.previewContainer :global(.w-md-editor-markdown table) {
+.previewContainer :global(.wmde-markdown table) {
   border-collapse: collapse;
   width: 100%;
   margin: 1em 0;
 }
 
-.previewContainer :global(.w-md-editor-markdown table th,
-.w-md-editor-markdown table td) {
+.previewContainer :global(.wmde-markdown table th,
+.wmde-markdown table td) {
   border: 1px solid #ddd;
   padding: 8px 12px;
   text-align: left;
 }
 
-.previewContainer :global(.w-md-editor-markdown table th) {
+.previewContainer :global(.wmde-markdown table th) {
   background-color: #f2f3f4;
   font-weight: 600;
 }
 
-.previewContainer :global(.w-md-editor-markdown hr) {
+.previewContainer :global(.wmde-markdown hr) {
   border: none;
   height: 1px;
   background-color: #e1e4e8;
@@ -154,7 +154,7 @@
     font-size: 0.9rem;
   }
   
-  .previewContainer :global(.w-md-editor-markdown) {
+  .previewContainer :global(.wmde-markdown) {
     font-size: 0.9rem;
   }
 }
