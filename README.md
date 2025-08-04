@@ -7,14 +7,18 @@ A client-side web application for curating documents by providing a split-view i
 ## Features
 
 - **Dual Upload Support**: Upload PDF/DOCX source documents alongside optional Markdown files
-- **Three-Panel Split-View Interface**: Resizable panes with independent scrolling:
-  - **Left**: Original document viewer (PDF/DOCX)
-  - **Middle**: Markdown editing panel
-  - **Right**: Live markdown preview
+- **Flexible Three-Panel Interface**: Resizable panes with **toggleable visibility** for optimal workflow:
+  - **📄 Source Panel**: Original document viewer (PDF/DOCX)
+  - **✏️ Editor Panel**: Markdown editing panel
+  - **👁️ Preview Panel**: Live markdown preview
+  - **Panel Controls**: Toggle any panel on/off via toolbar buttons for performance and focus
 - **Document Rendering**: 
   - PDF files rendered using PDF.js with **continuous scroll view** (all pages displayed vertically as images for performance)
   - DOCX files converted to clean HTML using Mammoth.js
-- **Rich Markdown Editor**: Full-featured editor with syntax highlighting using `@uiw/react-md-editor`, custom toolbar (bold, italic, strikethrough, lists, tables, etc.), and keyboard shortcuts
+- **High-Performance Markdown Editor**: 
+  - Full-featured editor with syntax highlighting using `@uiw/react-md-editor`
+  - Custom toolbar (bold, italic, strikethrough, lists, tables, etc.) and keyboard shortcuts
+  - **Performance optimized**: Debounced preview updates and conditional rendering for fast typing
 - **Export Functionality**: Download curated content as Markdown files at any time
 - **File Upload Staging**: Drag-and-drop or browse for files, with clear rejection and error messages for unsupported or extra files
 - **Client-Side Only**: No server required - runs entirely in the browser for privacy
@@ -78,10 +82,15 @@ The built files will be in the `dist` directory.
    - Click "Load Documents" to proceed
 
 2. **Active Curation Phase**:
-   - Work in a **three-panel layout** (all panels scroll independently):
-     - **Left panel**: View the original document (PDF/DOCX) with continuous scroll
-     - **Middle panel**: Edit markdown content with a rich editor
-     - **Right panel**: See a live preview of your markdown as you edit
+   - Work in a **flexible panel layout** (all panels scroll independently):
+     - **📄 Source Panel**: View the original document (PDF/DOCX) with continuous scroll
+     - **✏️ Editor Panel**: Edit markdown content with a rich, high-performance editor
+     - **👁️ Preview Panel**: See a live preview of your markdown as you edit
+   - **Panel Management**:
+     - **Toggle Controls**: Use toolbar buttons to show/hide any panel (📄 Source, ✏️ Editor, 👁️ Preview)
+     - **Performance Boost**: Hide preview panel for faster editing response during intensive writing
+     - **Focus Mode**: Show only the editor panel to eliminate distractions
+     - **Flexible Layouts**: Single panel (100%), dual panels (50%/50%), or triple panels (33%/34%/33%)
    - Use the toolbar for formatting options (bold, italic, headings, lists, links, tables, etc.)
    - Export your curated content using the "Export .md" button at any time
 
@@ -100,11 +109,16 @@ The built files will be in the `dist` directory.
 
 ### Markdown Editor Features
 
-- Powered by `@uiw/react-md-editor` with a custom toolbar:
-  - Bold, italic, strikethrough, horizontal rule, blockquote
-  - Unordered/ordered/checked lists
-  - Links, images, tables
+- **High-Performance Editor** powered by `@uiw/react-md-editor` with optimizations:
+  - Custom toolbar: Bold, italic, strikethrough, horizontal rule, blockquote
+  - Unordered/ordered/checked lists, links, images, tables
+  - **Performance optimized**: Debounced preview updates (300ms) for smooth typing
+  - **React memoization**: Prevents unnecessary re-renders and processing
 - Clean, focused editing experience with full height and responsive layout
+- **Panel Control Benefits**:
+  - Hide preview panel for maximum editing performance during intensive writing
+  - Focus mode: Show only editor panel to eliminate distractions
+  - Flexible workflow: Toggle between editing and preview as needed
 - Keyboard shortcuts:
   - **Ctrl/Cmd + B**: Bold
   - **Ctrl/Cmd + I**: Italic

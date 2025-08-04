@@ -18,6 +18,64 @@
 .toolbarLeft {
   display: flex;
   align-items: center;
+  flex: 1;
+}
+
+.toolbarCenter {
+  display: flex;
+  justify-content: center;
+  flex: 2;
+}
+
+.panelToggles {
+  display: flex;
+  gap: 0.25rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 0.25rem;
+  border: 1px solid #e9ecef;
+}
+
+.toggleButton {
+  background-color: transparent;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+  min-width: 80px;
+  justify-content: center;
+}
+
+.toggleButton.active {
+  background-color: #007bff;
+  color: white;
+  box-shadow: 0 1px 3px rgba(0, 123, 255, 0.3);
+}
+
+.toggleButton.inactive {
+  background-color: transparent;
+  color: #6c757d;
+}
+
+.toggleButton.inactive:hover:not(:disabled) {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.toggleButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.toggleButton.active:disabled {
+  background-color: #007bff;
+  color: white;
 }
 
 .title {
@@ -30,6 +88,8 @@
 .toolbarRight {
   display: flex;
   gap: 0.5rem;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 .exportButton {
@@ -56,22 +116,45 @@
   min-height: 0;
 }
 
-.splitContainer .left-pane {
+/* Panel styles - using new class names */
+.splitContainer .source-pane {
   overflow: auto; /* Allow PDF content to scroll naturally */
   position: relative;
   height: 100%;
 }
 
-.splitContainer .middle-pane {
+.splitContainer .editor-pane {
   overflow: hidden; /* Let markdown editor handle its own scrolling */
   position: relative;
   height: 100%;
 }
 
-.splitContainer .right-pane {
+.splitContainer .preview-pane {
   overflow: hidden; /* Let markdown preview handle its own scrolling */
   position: relative;
   height: 100%;
+}
+
+/* Single panel layout */
+.splitContainer.panels-1 .source-pane,
+.splitContainer.panels-1 .editor-pane,
+.splitContainer.panels-1 .preview-pane {
+  width: 100%;
+  flex: 1;
+}
+
+/* Two panel layout */
+.splitContainer.panels-2 .source-pane,
+.splitContainer.panels-2 .editor-pane,
+.splitContainer.panels-2 .preview-pane {
+  flex: 1;
+}
+
+/* Three panel layout - default behavior */
+.splitContainer.panels-3 .source-pane,
+.splitContainer.panels-3 .editor-pane,
+.splitContainer.panels-3 .preview-pane {
+  flex: 1;
 }
 
 .loadingOverlay {
@@ -134,8 +217,19 @@
     padding: 0.5rem;
   }
   
+  .toolbarLeft, .toolbarCenter, .toolbarRight {
+    flex: none;
+    justify-content: center;
+  }
+  
   .title {
     font-size: 1.1rem;
+  }
+  
+  .toggleButton {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    min-width: 70px;
   }
   
   .exportButton {
