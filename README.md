@@ -59,7 +59,35 @@ A client-side web application for curating documents by providing a split-view i
    ```bash
    npm run dev
    ```
-5. Open http://localhost:5173 in your browser
+5. Open http://localhost:7891 in your browser
+
+### Background Server Management
+
+For production or shared environments, use the provided shell scripts to manage the server:
+
+**Start server in background:**
+```bash
+./start-app.sh
+```
+This will:
+- Start the server on port 7891
+- Run in background with process management
+- Create log file (`curate-md.log`) and PID file (`curate-md.pid`)
+- Allow network access from `bardsbrain01.merck.com` through `bardsbrain20.merck.com`
+
+**Stop background server:**
+```bash
+./stop-app.sh
+```
+This will:
+- Cleanly stop the server and all child processes
+- Remove PID file
+- Ensure no orphaned processes remain
+
+**Check server logs:**
+```bash
+tail -f curate-md.log
+```
 
 ### Building for Production
 
